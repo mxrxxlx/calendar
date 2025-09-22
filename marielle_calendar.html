@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2014 Girly Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --light-purple: #f3e9f9;
+            --medium-purple: #c3a8e3;
+            --dark-purple: #8e62b0;
+            --darker-purple: #5c3c7d;
+            --dark-text: #4a4a4a;
+            --white-text: #ffffff;
+            --border-color: #e0d2ec;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            min-height: 100vh;
+            /* Marbled background with gradients */
+            background-color: var(--light-purple);
+            background-image: linear-gradient(135deg, var(--medium-purple) 25%, transparent 25%) -10px 0, linear-gradient(225deg, var(--medium-purple) 25%, transparent 25%) -10px 0, linear-gradient(315deg, var(--medium-purple) 25%, transparent 25%), linear-gradient(45deg, var(--medium-purple) 25%, transparent 25%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 0, 10px -10px, 0 10px;
+            
+        }
+
+        .calendar-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 5px solid var(--medium-purple);
+        }
+
+        .header {
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+            font-size: 5rem;
+            color: var(--dark-purple);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-top: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .month-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border: 2px solid var(--border-color);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .month-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .month-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: var(--darker-purple);
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day-header {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--dark-text);
+        }
+        
+        .day-cell {
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 6px;
+            background-color: var(--light-purple);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .day-cell:hover:not(.empty-day) {
+            transform: scale(1.05);
+            background-color: var(--medium-purple);
+            color: var(--white-text);
+        }
+
+        .empty-day {
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+
+        .holiday {
+            color: var(--white-text);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .ph-holiday {
+            background-color: #6a448d;
+        }
+        
+        .birthday {
+            background-color: #a77cd6;
+        }
+
+        .ph-holiday:hover { background-color: #553372; }
+        .birthday:hover { background-color: #8c5fb5; }
+
+        .holiday-note {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 0.6rem;
+            color: var(--white-text);
+            padding: 2px 4px;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            line-height: 1;
+        }
+        
+        .holiday-notes-container {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                font-size: 3rem;
+            }
+            .months-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calendar-container">
+        <h1 class="header">2014</h1>
+        
+        <div id="months-grid" class="months-grid">
+            <div class="month-card">
+                <h2 class="month-title">January</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell holiday ph-holiday" title="New Year's Day">1<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="day-cell holiday ph-holiday" title="Chinese New Year">31<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">February</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell holiday ph-holiday" title="EDSA People Power Anniversary">25<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">March</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="day-cell">31</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">April</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell holiday ph-holiday" title="Araw ng Kagitingan (Day of Valor)">9<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell holiday ph-holiday" title="Maundy Thursday">17<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell holiday ph-holiday" title="Good Friday">18<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell holiday ph-holiday" title="Black Saturday">19<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">May</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell holiday ph-holiday" title="Labor Day">1<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="day-cell">31</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">June</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell holiday ph-holiday" title="Independence Day">12<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">July</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="day-cell">31</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">August</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell holiday ph-holiday" title="Ninoy Aquino Day">21<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell holiday ph-holiday" title="National Heroes Day">25<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="day-cell">31</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">September</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">October</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell">30</div>
+                    <div class="day-cell">31</div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">November</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell holiday ph-holiday" title="All Saints' Day">1<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell">24</div>
+                    <div class="day-cell">25</div>
+                    <div class="day-cell">26</div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell holiday ph-holiday" title="Bonifacio Day">30<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                </div>
+            </div>
+            <div class="month-card">
+                <h2 class="month-title">December</h2>
+                <div class="days-grid">
+                    <div class="day-header">S</div>
+                    <div class="day-header">M</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">W</div>
+                    <div class="day-header">T</div>
+                    <div class="day-header">F</div>
+                    <div class="day-header">S</div>
+                    <div class="empty-day day-cell"></div>
+                    <div class="day-cell">1</div>
+                    <div class="day-cell">2</div>
+                    <div class="day-cell">3</div>
+                    <div class="day-cell">4</div>
+                    <div class="day-cell">5</div>
+                    <div class="day-cell">6</div>
+                    <div class="day-cell">7</div>
+                    <div class="day-cell">8</div>
+                    <div class="day-cell">9</div>
+                    <div class="day-cell">10</div>
+                    <div class="day-cell">11</div>
+                    <div class="day-cell">12</div>
+                    <div class="day-cell">13</div>
+                    <div class="day-cell">14</div>
+                    <div class="day-cell">15</div>
+                    <div class="day-cell">16</div>
+                    <div class="day-cell">17</div>
+                    <div class="day-cell">18</div>
+                    <div class="day-cell">19</div>
+                    <div class="day-cell">20</div>
+                    <div class="day-cell">21</div>
+                    <div class="day-cell">22</div>
+                    <div class="day-cell">23</div>
+                    <div class="day-cell holiday ph-holiday" title="Special Non-Working Day">24<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell holiday ph-holiday" title="Christmas Day">25<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell holiday ph-holiday" title="Special Non-Working Day">26<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell">27</div>
+                    <div class="day-cell">28</div>
+                    <div class="day-cell">29</div>
+                    <div class="day-cell holiday ph-holiday" title="Rizal Day">30<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                    <div class="day-cell holiday ph-holiday" title="Last Day of the Year">31<div class="holiday-notes-container"><span class="holiday-note">PH</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
